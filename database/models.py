@@ -9,14 +9,16 @@ load_dotenv()
 
 # Database connection parameters
 database = os.getenv("DB_NAME") # Replace with your database name
-username = os.getenv("AWS_USERNAME")  # Replace with your username
-password = os.getenv("AWS_PASSWORD")  # Replace with your password
-host = os.getenv("DATABASE_HOST_AWS")
+username = os.getenv("DB_USERNAME")  # Replace with your username
+password = os.getenv("DB_PASSWORD")  # Replace with your password
+host = os.getenv("DB_HOST")
 ssl_cert_path = os.path.join(os.getcwd(), '.postgresql', 'us-east-2-bundle.pem')
 
-
+# DATABASE_URL = "postgresql+psycopg2://postgres.ptvshictuksigopfdqhd:Rs80HR2dtQ6G1qMc@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
+DATABASE_URL = "postgresql://postgres.ldbqpikvlddcxzhgskki:KQgyD9RGuR33ACul@aws-0-us-east-2.pooler.supabase.com:5432/postgres"
 DATABASE_URL = (
-    f"postgresql://{username}:{password}@{host}:5432/{database}?sslmode=verify-full&sslrootcert={ssl_cert_path}"
+    # f"postgresql+psycopg2://postgres.ptvshictuksigopfdqhd:Rs80HR2dtQ6G1qMc@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
+    f"postgresql://postgres.ldbqpikvlddcxzhgskki:KQgyD9RGuR33ACul@aws-0-us-east-2.pooler.supabase.com:5432/postgres"
 )
 
 engine = create_engine(DATABASE_URL)

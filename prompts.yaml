@@ -16,6 +16,7 @@ feedback_prompt: |
   - If the student's answer fully aligns with the actual answer, provide positive feedback like "Your answer correctly addresses all key points. Good job!"
 
   **Note:** Use the relevant course content provided to inform your feedback.
+  if the user response donesnt make sense, provide feedback like "your answer doesnt make sense please refeer these documents"
 
 
 grading_prompt: |
