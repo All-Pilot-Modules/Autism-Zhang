@@ -23,8 +23,8 @@ COPY requirements.txt .
 
 # install dependecies for the obdc driver for mysql
 # COPY /odbc.ini / 
-RUN odbcinst -i -s -f /odbc.ini -l
-RUN cat /etc/odbc.ini
+# RUN odbcinst -i -s -f /odbc.ini -l
+# RUN cat /etc/odbc.ini
 
 RUN pip install -r requirements.txt
 # Copy the current directory contents into the container
