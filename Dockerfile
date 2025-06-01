@@ -22,7 +22,7 @@ RUN env ACCEPT_EULA=Y apt-get install -y msodbcsql18
 COPY requirements.txt .
 
 # install dependecies for the obdc driver for mysql
-COPY /odbc.ini / 
+# COPY /odbc.ini / 
 RUN odbcinst -i -s -f /odbc.ini -l
 RUN cat /etc/odbc.ini
 
