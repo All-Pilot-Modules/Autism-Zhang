@@ -15,11 +15,12 @@ host = os.getenv("DB_HOST")
 ssl_cert_path = os.path.join(os.getcwd(), '.postgresql', 'us-east-2-bundle.pem')
 
 # DATABASE_URL = "postgresql+psycopg2://postgres.ptvshictuksigopfdqhd:Rs80HR2dtQ6G1qMc@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
-DATABASE_URL = "postgresql://postgres.ldbqpikvlddcxzhgskki:KQgyD9RGuR33ACul@aws-0-us-east-2.pooler.supabase.com:5432/postgres"
-DATABASE_URL = (
-    # f"postgresql+psycopg2://postgres.ptvshictuksigopfdqhd:Rs80HR2dtQ6G1qMc@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
-    f"postgresql://postgres.ldbqpikvlddcxzhgskki:KQgyD9RGuR33ACul@aws-0-us-east-2.pooler.supabase.com:5432/postgres"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# DATABASE_URL = (
+#     # f"postgresql+psycopg2://postgres.ptvshictuksigopfdqhd:Rs80HR2dtQ6G1qMc@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
+#     f"postgresql://postgres.ldbqpikvlddcxzhgskki:KQgyD9RGuR33ACul@aws-0-us-east-2.pooler.supabase.com:5432/postgres"
+# )
 
 engine = create_engine(DATABASE_URL)
 
