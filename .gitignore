@@ -127,14 +127,18 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# Environments
-# .env
-# .venv
-# env/
-# venv/
-# ENV/
-# env.bak/
-# venv.bak/
+# Environments - IMPORTANT: Keep these uncommented to protect sensitive data
+.env
+.env.local
+.env.production
+.env.staging
+.env.development
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # Spyder project settings
 .spyderproject
@@ -172,3 +176,63 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# ===== PROJECT SPECIFIC IGNORES =====
+
+# Database and Storage
+Vector_Storage/
+*.db
+*.sqlite
+*.sqlite3
+
+# AI and ML Files
+*.model
+*.pkl
+*.pickle
+*.h5
+*.onnx
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Certificate files (sensitive)
+*.pem
+*.key
+*.crt
+.postgresql/
+
+# API Keys and Secrets (extra protection)
+secrets/
+keys/
+credentials/
+config.json
+auth.json
+
+# Test data and output
+test_output/
+temp_files/
+cache/
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ChromaDB specific
+chroma.sqlite3
+chroma.sqlite3-*

@@ -7,22 +7,18 @@ from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
-# Database connection parameters
-database = os.getenv("DB_NAME") # Replace with your database name
-username = os.getenv("DB_USERNAME")  # Replace with your username
-password = os.getenv("DB_PASSWORD")  # Replace with your password
-host = os.getenv("DB_HOST")
-ssl_cert_path = os.path.join(os.getcwd(), '.postgresql', 'us-east-2-bundle.pem')
-
-# DATABASE_URL = "postgresql+psycopg2://postgres.ptvshictuksigopfdqhd:Rs80HR2dtQ6G1qMc@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
+# Database connection using DATABASE_URL
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# DATABASE_URL = (
-#     # f"postgresql+psycopg2://postgres.ptvshictuksigopfdqhd:Rs80HR2dtQ6G1qMc@aws-0-us-east-2.pooler.supabase.com:5432/postgres?sslmode=require"
-#     f"postgresql://postgres.ldbqpikvlddcxzhgskki:KQgyD9RGuR33ACul@aws-0-us-east-2.pooler.supabase.com:5432/postgres"
-# )
-
-engine = create_engine(DATABASE_URL)
+# Configure engine with connection pooling for Supabase
+engine = create_engine(
+    DATABASE_URL,
+    pool_size=5,
+    max_overflow=10,
+    pool_timeout=30,
+    pool_recycle=1800,
+    pool_pre_ping=True
+)
 
 # Create a base class for declarative models
 Base = declarative_base()

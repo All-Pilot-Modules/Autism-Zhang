@@ -1,43 +1,56 @@
 ARG PYTHON_VERSION=3.10
-FROM python:${PYTHON_VERSION} AS python-base
+FROM python:${PYTHON_VERSION}-slim AS python-base
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DEBIAN_FRONTEND=noninteractive
 
 # Set the working directory in the container
-WORKDIR /AI-Education-Pilot
-# Install system dependencies and the psycopg2 package
+WORKDIR /app
+
+# Install system dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    libpq-dev gcc curl gnupg2 && \
-    rm -rf /var/lib/apt/lists/* && \
-    pip install --upgrade pip && \
-    pip install psycopg2
+    libpq-dev \
+    gcc \
+    curl \
+    gnupg2 \
+    build-essential && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list 
+# Install Microsoft ODBC drivers (if needed for SQL Server)
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && \
+    ACCEPT_EULA=Y apt-get install -y msodbcsql18 && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN exit
-RUN apt-get update
-RUN env ACCEPT_EULA=Y apt-get install -y msodbcsql18 
+# Upgrade pip
+RUN pip install --upgrade pip
 
+# Copy and install Python dependencies
 COPY requirements.txt .
-
-# install dependecies for the obdc driver for mysql
-# COPY /odbc.ini / 
-# RUN odbcinst -i -s -f /odbc.ini -l
-# RUN cat /etc/odbc.ini
-
-RUN pip install -r requirements.txt
-# Copy the current directory contents into the container
-COPY . /AI-Education-Pilot
-# Copy the root certificate into the container
-COPY .postgresql/us-east-2-bundle.pem /root/.postgresql/us-east-2-bundle.pem
-
-
-# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port 
+# Copy the application code
+COPY . /app
+
+# Create directory for PostgreSQL certificates (if needed)
+RUN mkdir -p /root/.postgresql
+COPY .postgresql/us-east-2-bundle.pem /root/.postgresql/us-east-2-bundle.pem 2>/dev/null || true
+
+# Create a non-root user for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN chown -R appuser:appuser /app
+USER appuser
+
+# Expose port for Streamlit
 EXPOSE 8501
 
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8501/_stcore/health || exit 1
+
 # Define the command to run the app using Streamlit
-CMD ["streamlit", "run", "app.py"]
+CMD ["streamlit", "run", "app.py", "--server.address=0.0.0.0", "--server.port=8501"]
